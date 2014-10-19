@@ -145,5 +145,15 @@ content.addEventListener('touchend', function(e) {
         snapToBounds(content, 'bottom');
     }
 }, false);
+var my = (function() {
+    var myVar = 'test';
+    var myFunc = function() {
+        console.log(myVar);
+    }
+    return {
+        yourFunc : myFunc
+    }
+})();
+my.yourFunc();
 </script>
 </html>
