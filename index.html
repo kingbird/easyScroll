@@ -15,8 +15,8 @@
     header {top:0;}
     .content {overflow:hidden;position:absolute;width:100%;top:40px;bottom:0;background:#efefef;color:#333;}
     .content ul {background-color:#fff;}
-    .content ul li {height:20px;line-height:20px;}
-    .content ul li:first-child, .content ul li:last-child {background-color:#ccc;}
+    .content ul li {height:30px;line-height:30px;border-bottom:1px #ccc solid;}
+    .content ul li:first-child, .content ul li:last-child {background-color:#ccc;border-bottom:none;}
     </style>
 </head>
 <body>
@@ -92,9 +92,6 @@
     </div>
 </body>
 <script>
-var myFunction = function () {
-    document.querySelector('input').style.background = 'lightgreen';
-};
 function $(obj) {
     return document.querySelectorAll(obj);
 }
@@ -111,25 +108,32 @@ function snapToBounds(obj, type) {
         obj.style.webkitTransform = 'translate3d(0, ' + maxY + 'px, 0)';
         moveY = maxY;
     }
-
 }
 function getMaxY(container, content) {
     var containerHeight = container.offsetHeight,
         contentHeight = content.offsetHeight;
     return containerHeight - contentHeight;
 }
+function isDrag(s, e, t) {
+    if((e-s) > t) {
+        return true;
+    } else {
+        return false;
+    }
+}
 document.body.ontouchmove = function(e) {
     e.preventDefault();
 }
 var container = $('.content')[0];
 var content = $('.content ul')[0];
-var startY, moveY, maxY;
+var startY, moveY, maxY, timeStart, timeEnd, timeDrag = 150;
 content.addEventListener('touchmove', this, false);
 content.addEventListener('touchstart', function(e) {
     startY = e.targetTouches[0].pageY;
     if(moveY) {
         startY = startY - moveY;
-    }   
+    }
+    timeStart = new Date().getTime();
 }, false);
 content.addEventListener('touchmove', function(e) {
     moveY = e.targetTouches[0].pageY - startY;
@@ -144,16 +148,8 @@ content.addEventListener('touchend', function(e) {
         moveY = maxY;
         snapToBounds(content, 'bottom');
     }
+    timeEnd = new Date().getTime();
+    console.log(isDrag(timeStart, timeEnd, timeDrag));
 }, false);
-var my = (function() {
-    var myVar = 'test';
-    var myFunc = function() {
-        console.log(myVar);
-    }
-    return {
-        yourFunc : myFunc
-    }
-})();
-my.yourFunc();
 </script>
 </html>
